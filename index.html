@@ -3844,42 +3844,6 @@
 <script>
 const projects = [
   {
-    id: "ai-native-platform",
-    category: "ai",
-    title: "An end-to-end AI-native procurement platform.",
-    titleEm: "AI-native",
-    industry: "AI-Native Enterprise Platform",
-    year: "2025–present",
-    duration: "Ongoing",
-    team: "Under NDA",
-    role: "Lead Experience Engineer",
-    excerpt: "Service and product designer for a Fortune 500 procurement reinvention. Built a methodology where behavioral models — not prototypes — are the source of truth, then shipped the actor model, the agents, and the working product against them.",
-    tags: ["Currently shipping", "AI-native", "Procurement", "Behavioral modeling"],
-    color: "#2547ff",
-    color2: "#1530c4",
-    visual: "matrix",
-    challenge: "A Fortune 500 enterprise needed to reinvent procurement end-to-end — sourcing, intake, supplier management — as one coherent service spanning eight lifecycle stages and 25 cross-functional roles. The team: a PM and one designer. The harder problem underneath: AI-native products don't live in the visual layer. A wireframe can show what a screen looks like. It can't show what the AI should do at 72% confidence versus 45%, when to push back, when to stay quiet. The behavioral layer is the product.",
-    process: "<strong>Synthesized 751 workshop post-its into 10 cross-cutting experience intents</strong> — contracts between system and user — then broke those into 84 measurable stage goals, each tied to stakeholder voice and feasibility-checked against real data.<br><br><strong>Wrote 79 behavioral models</strong> using a framework I authored called SDACE (Sense · Decide · Act · Communicate · Evolve). Each model is 200–300 lines specifying what the system perceives, decides, executes, communicates per persona, and learns from. Each one doubles as service blueprint and product specification.<br><br><blockquote class=\"ai-pullquote\">Behavioral models are the <em>source of truth</em>. Prototypes are hypotheses.</blockquote><strong>Built a 4-tier actor model covering 25 roles</strong> — primary users, participants, cross-functional dependencies, counterparties. Forgetting Tier 3 is how AI products surprise users at week 10.<br><br><strong>Authored an experience agent</strong> that loads design judgment, behavioral rules, and accumulated Product Design Rules into every prototyping session.",
-    leadership: [
-      "<strong>Closed the gap between service design and product spec.</strong> The behavioral model is the future-state blueprint, the product specification, and the engineering contract — same artifact. No handoff, no drift.",
-      "<strong>Invented a transferable methodology.</strong> Workshop evidence → intents → goals → behavioral models → prototype → check against models → design rules. Documented end-to-end. Adjacent pods now run it without me.",
-      "<strong>Used AI to scale a team of one.</strong> Authored an experience agent and a 7-step evidence-triangulation engine that let one designer ship 79 models, 128 features, and 9 production screens without losing rigor."
-    ],
-    outcome: "Shipped a working React prototype, a 16-slide leadership demo, and 7 accumulated Product Design Rules that constrain every new screen. The methodology spread: adjacent pods adopted the SDACE format, actor model, and experience agent pattern. Three workstreams — sourcing, intake, supplier management — now operate from one shared behavioral spec and one design system.",
-    impact: [
-      { num: "$B+", label: "annual procurement spend in scope" },
-      { num: "79", label: "SDACE behavioral models authored" },
-      { num: "751", label: "workshop post-its synthesized into a buildable spec" },
-      { num: "128", label: "features specified end-to-end with evidence trail" }
-    ],
-    impactNote: "The three biggest features in the build weren't in the original workshop. They surfaced from running an evidence-triangulation engine against tool activities, pain points, and future state — features the stakeholders missed because they shared the same blind spots.",
-    lesson: "AI products live in the behavioral layer, not the visual one. A prototype can look finished while missing an entire decision flow. The model is what you actually shipped — the screen just renders it.",
-    images: [
-      { src: "images/ai-native-platform-artifact-1.png", caption: "The 4-tier actor model — primary users, participants, cross-functional dependencies, and counterparties. 25 roles mapped as the source of truth for personas, permissions, and handoffs across the procurement lifecycle." },
-      { src: "images/ai-native-platform-cover.png", caption: "A sourcing decision moment — three supplier proposals compared, the agent's recommendation surfaced with rationale and savings, the human-approval gate before any spend lands." }
-    ]
-  },
-  {
     id: "vacation-rentals",
     category: "hospitality",
     title: "Maximizing checkout conversion in a vacation rentals booking funnel",
