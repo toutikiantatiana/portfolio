@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airbnb Experience Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --r:#FF385C;--rd:#E00B41;
+  --ink:#222222;--mid:#6A6A6A;--soft:#B0B0B0;
+  --line:#DDDDDD;--line2:#EBEBEB;
+  --sur:#F7F7F7;--wh:#FFFFFF;
+  --b:#008A05;--bl:#F0F9F0;
+  --amb:#B07000;--ambl:#FBF5E9;
+  --rl:#FFF5F7;
+  --rsm:8px;--rmd:12px;--rlg:16px;--rpill:999px;
+}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#EDEDED;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:20px;color:var(--ink);}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+#phone{width:380px;background:var(--wh);border-radius:36px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 40px rgba(0,0,0,.14);}
+.notch{height:26px;display:flex;align-items:center;justify-content:center;background:var(--wh);}
+.notch::after{content:'';width:90px;height:5px;background:var(--line);border-radius:var(--rpill);}
+.vp{position:relative;overflow:hidden;}
+
+.top{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--line2);}
+.top-l{display:flex;align-items:center;gap:7px;}
+.top-w{font-size:14px;font-weight:600;color:var(--r);letter-spacing:-0.2px;}
+.av{width:28px;height:28px;border-radius:50%;background:var(--sur);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--mid);}
+
+.prog{display:flex;align-items:center;padding:10px 18px;}
+.ps{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--soft);font-weight:500;}
+.ps.on{color:var(--ink);}
+.ps.done{color:var(--b);}
+.pd{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;background:var(--wh);}
+.ps.on .pd{border-color:var(--ink);background:var(--ink);color:#fff;}
+.ps.done .pd{border-color:var(--b);background:var(--b);color:#fff;}
+.pl{flex:1;height:1.5px;background:var(--line2);margin:0 6px;border-radius:2px;}
+.pl.done{background:var(--b);}
+
+.screen{display:none;flex-direction:column;height:580px;}
+.screen.on{display:flex;}
+.scroll{flex:1;overflow-y:auto;padding:20px 18px 8px;}
+.scroll::-webkit-scrollbar{width:0;}
+.foot{padding:12px 18px;border-top:1px solid var(--line2);background:var(--wh);flex-shrink:0;}
+.btn{background:var(--r);color:#fff;border:none;border-radius:var(--rsm);padding:14px;font-size:15px;font-weight:600;cursor:pointer;width:100%;transition:background .15s;}
+.btn:hover{background:var(--rd);}
+.btn:disabled{background:var(--line);cursor:not-allowed;}
+.back{background:none;border:none;color:var(--ink);font-size:13px;font-weight:500;cursor:pointer;padding:0;display:flex;align-items:center;gap:3px;margin-bottom:16px;}
+
+.eyebrow{font-size:11px;font-weight:600;color:var(--mid);letter-spacing:.3px;margin-bottom:6px;}
+.h1{font-size:21px;font-weight:600;line-height:1.25;letter-spacing:-0.4px;margin-bottom:7px;}
+.lede{font-size:14px;color:var(--mid);line-height:1.5;margin-bottom:20px;}
+
+.w-h1{font-size:23px;font-weight:600;line-height:1.22;letter-spacing:-0.5px;margin-bottom:8px;}
+.w-lede{font-size:13.5px;color:var(--mid);line-height:1.5;margin-bottom:24px;}
+.tier-lbl{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:var(--mid);letter-spacing:.3px;text-transform:uppercase;margin-bottom:11px;}
+.tier-lbl .tl-line{flex:1;height:1px;background:var(--line2);}
+.tier-sub{font-size:12px;color:var(--soft);font-weight:500;margin:-6px 0 11px;line-height:1.4;}
+.pillars-intro{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-bottom:24px;}
+.pillars-intro.further{margin-bottom:8px;}
+.pi-item{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid var(--line2);border-radius:var(--rsm);}
+.pi-item.further-item{border-color:var(--rl);background:var(--rl);}
+.pi-ic{width:18px;height:18px;color:var(--r);flex-shrink:0;margin-top:1px;}
+.pi-t{font-size:13px;font-weight:600;margin-bottom:1px;letter-spacing:-0.1px;}
+.pi-d{font-size:11.5px;color:var(--mid);line-height:1.35;}
+.how-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:13px;background:var(--sur);border-radius:var(--rmd);}
+.how-h{font-size:11px;font-weight:600;color:var(--mid);margin-right:2px;}
+.how-step{font-size:12px;font-weight:600;color:var(--ink);}
+.how-arr{font-size:12px;color:var(--soft);}
+.steps{display:flex;flex-direction:column;}
+.step-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line2);}
+.step-item:last-child{border-bottom:none;}
+.step-n{width:26px;height:26px;border-radius:50%;background:var(--sur);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--ink);flex-shrink:0;}
+.step-tt{font-size:14px;font-weight:600;margin-bottom:2px;}
+.step-dd{font-size:13px;color:var(--mid);line-height:1.4;}
+
+.prompt-q{font-size:15px;font-weight:500;line-height:1.4;margin-bottom:16px;color:var(--ink);}
+.input-shell{border:1px solid var(--line);border-radius:var(--rmd);overflow:hidden;transition:border-color .15s;}
+.input-shell:focus-within{border-color:var(--ink);}
+.input-shell.rec{border-color:var(--r);}
+textarea{width:100%;min-height:90px;padding:13px;border:none;font-size:14px;color:var(--ink);resize:none;font-family:inherit;line-height:1.55;outline:none;display:block;}
+textarea::placeholder{color:var(--soft);}
+.input-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 10px 8px 13px;border-top:1px solid var(--line2);background:var(--sur);}
+.input-hint{font-size:12px;color:var(--mid);display:flex;align-items:center;gap:6px;}
+.mic{width:36px;height:36px;border-radius:50%;border:none;background:var(--ink);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;flex-shrink:0;}
+.mic:hover{transform:scale(1.05);}
+.mic.rec{background:var(--r);animation:pulse 1.1s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,56,92,.35);}50%{box-shadow:0 0 0 9px rgba(255,56,92,0);}}
+.wave{display:flex;align-items:center;gap:2.5px;height:18px;}
+.wave span{width:2.5px;background:var(--r);border-radius:2px;display:inline-block;animation:wv .8s infinite;}
+.wave span:nth-child(1){height:7px;animation-delay:0s;}.wave span:nth-child(2){height:15px;animation-delay:.1s;}.wave span:nth-child(3){height:10px;animation-delay:.2s;}.wave span:nth-child(4){height:17px;animation-delay:.3s;}.wave span:nth-child(5){height:8px;animation-delay:.15s;}
+@keyframes wv{0%,100%{transform:scaleY(1);}50%{transform:scaleY(1.5);}}
+
+.confirm{border:1px solid var(--line);border-radius:var(--rmd);padding:13px;margin-top:13px;display:none;}
+.confirm-l{font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;}
+.confirm-t{font-size:12px;line-height:1.5;color:var(--ink);margin-bottom:13px;}
+.confirm-acts{display:flex;gap:8px;}
+.cbtn{flex:1;font-size:12px;font-weight:600;padding:10px;border-radius:var(--rsm);border:1px solid var(--line);background:var(--wh);cursor:pointer;color:var(--ink);}
+.cbtn.go{background:var(--ink);border-color:var(--ink);color:#fff;}
+
+.chips{display:none;flex-wrap:wrap;gap:7px;margin-top:18px;}
+.chips-h{width:100%;font-size:12px;font-weight:600;color:var(--mid);margin-bottom:2px;}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:var(--rpill);padding:7px 13px;font-size:13px;color:var(--ink);background:var(--wh);}
+.chip i{font-size:13px;color:var(--mid);}
+
+.convo{display:none;flex-direction:column;gap:18px;margin-top:22px;}
+.convo-h{font-size:12px;font-weight:600;color:var(--mid);}
+.cq-lbl{font-size:12px;font-weight:600;margin-bottom:7px;color:var(--ink);}
+.cq-txt{font-size:14px;line-height:1.45;color:var(--mid);margin-bottom:10px;}
+.cq .input-shell textarea{min-height:70px;}
+.cbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
+.nq{font-size:13px;font-weight:600;padding:9px 18px;border-radius:var(--rsm);background:var(--ink);color:#fff;border:none;cursor:pointer;}
+.sk{font-size:13px;font-weight:500;padding:9px 16px;border-radius:var(--rsm);background:none;color:var(--mid);border:none;cursor:pointer;}
+
+.detected{display:none;margin-top:22px;}
+.det-h{font-size:13px;font-weight:600;margin-bottom:12px;}
+.det-card{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line2);border-radius:var(--rmd);padding:12px 13px;margin-bottom:8px;}
+.det-tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:var(--rpill);align-self:flex-start;}
+.det-tag.expertise{background:var(--bl);color:var(--b);}
+.det-tag.access{background:var(--rl);color:var(--r);}
+.det-tag.pov{background:var(--ambl);color:var(--amb);}
+.det-txt{font-size:13px;color:var(--ink);line-height:1.45;}
+.det-gap{border:1px dashed var(--line);border-radius:var(--rmd);padding:13px;margin-top:14px;background:var(--sur);}
+.det-gap-h{font-size:12px;font-weight:600;color:var(--mid);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.det-gap-h i{color:var(--amb);font-size:14px;}
+.det-gap-q{font-size:13px;color:var(--ink);line-height:1.4;margin-bottom:10px;}
+.det-gap .input-shell{background:var(--wh);}
+.det-gap textarea{min-height:64px;}
+.think{display:none;align-items:center;gap:8px;padding:12px 14px;background:var(--sur);border-radius:var(--rmd);font-size:13px;color:var(--mid);margin-top:16px;}
+.dots span{display:inline-block;animation:bl 1.2s infinite;}.dots span:nth-child(2){animation-delay:.2s;}.dots span:nth-child(3){animation-delay:.4s;}
+@keyframes bl{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+
+.badge-time{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--mid);background:var(--sur);padding:5px 11px;border-radius:var(--rpill);margin-bottom:20px;}
+.arow{display:flex;gap:14px;}
+.al{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;}
+.anode{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:var(--wh);z-index:1;}
+.anode.done{border-color:var(--b);background:var(--b);color:#fff;}
+.anode.onn{border-color:var(--ink);}
+.anode.pk{border-color:var(--r);background:var(--r);color:#fff;}
+.aconn{width:1.5px;flex:1;min-height:16px;background:var(--line);margin:3px 0;}
+.aconn.done{background:var(--b);}
+.ar{flex:1;padding:1px 0 18px;min-width:0;}
+.aslbl{font-size:11px;font-weight:600;color:var(--mid);margin-bottom:3px;}
+.ast{font-size:15px;font-weight:600;margin-bottom:6px;letter-spacing:-0.2px;}
+.asd{font-size:13px;color:var(--mid);line-height:1.5;}
+.hv{font-size:13px;line-height:1.45;color:var(--ink);padding:9px 12px;background:var(--sur);border-radius:var(--rsm);margin:6px 0 8px;border-left:2px solid var(--ink);}
+.peak-box{border:1px solid var(--r);border-radius:var(--rmd);padding:13px;background:var(--rl);}
+.peak-eye{font-size:11px;font-weight:600;color:var(--r);margin-bottom:5px;display:flex;align-items:center;gap:4px;}
+.peak-t{font-size:15px;font-weight:600;margin-bottom:7px;letter-spacing:-0.2px;}
+.peak-d{font-size:13px;color:var(--mid);line-height:1.5;}
+.stops{display:flex;flex-direction:column;gap:7px;margin:6px 0 9px;}
+.stop{display:flex;gap:10px;padding:11px 12px;background:var(--wh);border:1px solid var(--line2);border-radius:var(--rsm);}
+.snum{width:20px;height:20px;border-radius:50%;background:var(--sur);color:var(--mid);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.sn{font-size:13px;font-weight:600;margin-bottom:2px;}
+.sd2{font-size:12px;color:var(--mid);line-height:1.4;}
+.add-stop{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1px dashed var(--line);border-radius:var(--rsm);background:none;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;width:100%;}
+.add-stop:hover{border-color:var(--ink);color:var(--ink);}
+.note{display:flex;gap:9px;padding:12px;border-radius:var(--rmd);margin-top:9px;font-size:13px;line-height:1.45;}
+.note.ok{background:var(--bl);}
+.note.warn{background:var(--ambl);}
+.note-link{background:none;border:none;color:var(--amb);font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;font-family:inherit;}
+.more-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--mid);font-size:12px;font-weight:600;cursor:pointer;padding:0;margin-top:10px;font-family:inherit;}
+.more-btn:hover{color:var(--ink);}
+.more-btn span{font-size:14px;}
+.more-tip{display:none;font-size:12px;color:var(--ink);line-height:1.55;margin-top:8px;padding:10px 12px;background:var(--bl);border-radius:var(--rsm);border-left:2px solid var(--b);}
+.more-tip.show{display:block;}
+.note i{flex-shrink:0;margin-top:1px;}
+.note.ok i{color:var(--b);}.note.warn i{color:var(--amb);}
+
+
+.cult{display:flex;gap:11px;align-items:flex-start;padding:13px;background:var(--sur);border-radius:var(--rmd);margin-bottom:18px;}
+.cult-fl{font-size:20px;flex-shrink:0;line-height:1.2;}
+.cult-n{font-size:13px;font-weight:600;margin-bottom:3px;}
+.cult-i{font-size:12px;color:var(--mid);line-height:1.45;}
+
+.pillars{display:flex;flex-direction:column;gap:8px;}
+.sc-tier{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:var(--mid);letter-spacing:.3px;text-transform:uppercase;margin:18px 0 4px;}
+.sc-tier:first-child{margin-top:0;}
+.sc-tier .tl-line{flex:1;height:1px;background:var(--line2);}
+.pc{border:1px solid var(--line2);border-radius:var(--rmd);padding:14px;cursor:pointer;transition:border-color .15s;}
+.pc.open{border-color:var(--ink);}
+.pc-h{display:flex;align-items:center;justify-content:space-between;}
+.pc-n{font-size:14px;font-weight:600;}
+.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--rpill);}
+.badge.ok{background:var(--bl);color:var(--b);}.badge.warn{background:var(--ambl);color:var(--amb);}.badge.flag{background:var(--rl);color:var(--r);}
+.pc-q{font-size:12px;color:var(--mid);line-height:1.4;margin-top:5px;}
+.pc-d{display:none;font-size:13px;line-height:1.5;color:var(--ink);border-top:1px solid var(--line2);padding-top:11px;margin-top:11px;}
+.pc.open .pc-d{display:block;}
+.pc-cult{font-size:12px;color:var(--b);margin-top:9px;padding:8px 10px;background:var(--bl);border-radius:var(--rsm);line-height:1.45;}
+.pc-sug{font-size:12px;line-height:1.5;margin-top:9px;padding:9px 11px;background:var(--sur);border-radius:var(--rsm);}
+.pc-sug strong{color:var(--ink);}
+
+.m-card{border:1px solid var(--line2);border-radius:var(--rmd);padding:14px;margin-bottom:10px;transition:all .2s;}
+.m-card.hl{border-color:var(--r);box-shadow:0 0 0 3px var(--rl);}
+.m-card.added{border-color:var(--b);background:var(--bl);}
+.m-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;}
+.mw{font-size:11px;font-weight:600;color:var(--mid);}
+.mtag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--rpill);display:inline-block;flex-shrink:0;}
+.mtag.conn{background:var(--bl);color:var(--b);}.mtag.part{background:var(--sur);color:var(--mid);}.mtag.peak{background:var(--rl);color:var(--r);}.mtag.earn{background:var(--ambl);color:var(--amb);}
+.mt{font-size:14px;font-weight:600;margin-bottom:5px;letter-spacing:-0.2px;}
+.md{font-size:13px;color:var(--mid);line-height:1.5;margin-bottom:12px;}
+.am{font-size:13px;font-weight:600;padding:10px;border-radius:var(--rsm);border:1px solid var(--ink);background:var(--wh);cursor:pointer;color:var(--ink);width:100%;transition:all .15s;}
+.am:hover{background:var(--ink);color:#fff;}
+.am.added{border-color:var(--b);color:var(--b);background:var(--bl);cursor:default;}
+.am.added:hover{background:var(--bl);color:var(--b);}
+
+.evolve{border:1px solid var(--line2);border-radius:var(--rmd);padding:16px;margin-top:20px;}
+.ev-t{font-size:14px;font-weight:600;margin-bottom:5px;letter-spacing:-0.2px;}
+.ev-s{font-size:12px;color:var(--mid);line-height:1.45;margin-bottom:14px;}
+.ev-flow{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.ev-step{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink);}
+.ev-dot{width:22px;height:22px;border-radius:50%;background:var(--sur);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--mid);flex-shrink:0;}
+.ev-stat{background:var(--sur);border-radius:var(--rsm);padding:11px 13px;font-size:12px;line-height:1.5;color:var(--ink);}
+.ev-stat strong{color:var(--r);}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:15px 0 2px;margin-top:4px;border-top:1px solid var(--line2);}
+.tog-i{font-size:13px;}.tog-i small{display:block;font-size:11px;color:var(--mid);margin-top:2px;}
+.tog{position:relative;width:40px;height:23px;border-radius:var(--rpill);background:var(--b);border:none;cursor:pointer;flex-shrink:0;transition:background .15s;}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:transform .15s;}
+.tog.off{background:var(--line);}.tog:not(.off)::after{transform:translateX(17px);}
+
+.ov{display:none;position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:50;align-items:flex-end;}
+.ov.show{display:flex;}
+.sheet{background:var(--wh);border-radius:18px 18px 0 0;width:100%;max-height:88%;overflow-y:auto;padding:18px;}
+.grab{width:34px;height:4px;background:var(--line);border-radius:var(--rpill);margin:0 auto 16px;}
+.sheet-t{font-size:16px;font-weight:600;margin-bottom:3px;letter-spacing:-0.3px;}
+.sheet-m{font-size:12px;color:var(--mid);margin-bottom:18px;}
+.sheet-sec{margin-bottom:16px;}
+.sheet-sl{font-size:11px;font-weight:600;color:var(--mid);margin-bottom:9px;}
+.bp-ar{display:flex;gap:9px;margin-bottom:8px;}
+.bp-ad{width:22px;height:22px;border-radius:50%;background:var(--b);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bp-ad.pk{background:var(--r);}
+.bp-at{font-size:12px;line-height:1.5;flex:1;}
+.bp-fl{font-size:12px;padding:8px 11px;border-radius:var(--rsm);margin-bottom:6px;line-height:1.45;}
+.bp-fl.ok{background:var(--bl);}.bp-fl.warn{background:var(--ambl);}.bp-fl.flag{background:var(--rl);}
+
+/* blueprint tabs */
+.bp-tabs{display:flex;gap:4px;background:var(--sur);border-radius:var(--rsm);padding:3px;margin-bottom:18px;}
+.bp-tab{flex:1;text-align:center;font-size:12px;font-weight:600;padding:8px;border-radius:6px;cursor:pointer;color:var(--mid);border:none;background:none;transition:all .15s;}
+.bp-tab.active{background:var(--wh);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.bp-view{display:none;}
+.bp-view.active{display:block;}
+
+/* listing preview */
+.lst-hero{height:120px;border-radius:var(--rmd);background:linear-gradient(135deg,#FF385C 0%,#FF7A8A 55%,#FFB400 130%);position:relative;overflow:hidden;margin-bottom:14px;display:flex;align-items:flex-end;padding:12px;}
+.lst-hero-badge{font-size:10px;font-weight:600;color:#fff;background:rgba(0,0,0,.22);padding:4px 9px;border-radius:var(--rpill);backdrop-filter:blur(4px);}
+.lst-hero-ic{position:absolute;top:12px;right:12px;font-size:18px;color:rgba(255,255,255,.85);}
+.lst-title{font-size:18px;font-weight:600;line-height:1.25;letter-spacing:-0.3px;margin-bottom:8px;}
+.lst-meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink);margin-bottom:14px;flex-wrap:wrap;}
+.lst-meta .dot{color:var(--soft);}
+.lst-rate{display:flex;align-items:center;gap:3px;font-weight:600;}
+.lst-rate i{color:var(--ink);font-size:13px;}
+.lst-host{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);margin-bottom:14px;}
+.lst-host-av{width:38px;height:38px;border-radius:50%;background:var(--r);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;}
+.lst-host-n{font-size:13px;font-weight:600;}
+.lst-host-d{font-size:12px;color:var(--mid);}
+.lst-sec-t{font-size:14px;font-weight:600;margin-bottom:10px;letter-spacing:-0.2px;}
+.lst-do{display:flex;flex-direction:column;gap:11px;margin-bottom:16px;}
+.lst-do-item{display:flex;gap:11px;}
+.lst-do-ic{width:26px;height:26px;border-radius:50%;background:var(--sur);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink);flex-shrink:0;}
+.lst-do-ic.pk{background:var(--rl);color:var(--r);}
+.lst-do-t{font-size:13px;font-weight:600;margin-bottom:2px;}
+.lst-do-d{font-size:12px;color:var(--mid);line-height:1.4;}
+.lst-inc{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px;}
+.lst-inc-i{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink);background:var(--sur);padding:6px 11px;border-radius:var(--rpill);}
+.lst-inc-i i{font-size:13px;color:var(--mid);}
+.lst-note{font-size:11px;color:var(--soft);text-align:center;margin-top:14px;font-style:italic;}
+.submit-note{font-size:12px;color:var(--mid);line-height:1.5;background:var(--sur);border-radius:var(--rsm);padding:11px 13px;margin-bottom:10px;}
+.confirmed{display:none;text-align:center;padding:14px 8px 4px;}
+.confirmed-ic{font-size:46px;color:var(--b);line-height:1;margin-bottom:12px;}
+.confirmed-t{font-size:18px;font-weight:600;margin-bottom:8px;letter-spacing:-0.3px;}
+.confirmed-d{font-size:13px;color:var(--mid);line-height:1.5;}
+
+/* Carousel examples */
+.pq-carousel{border:1px solid var(--line2);border-radius:var(--rmd);overflow:hidden;margin-bottom:10px;}
+.pqc-slide{display:none;font-size:12px;color:var(--mid);line-height:1.5;padding:11px 13px;font-style:italic;}
+.pqc-slide.on{display:block;}
+.pqc-footer{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-top:1px solid var(--line2);background:var(--sur);}
+.pqc-dots{display:flex;gap:5px;align-items:center;}
+.pqc-dot{width:5px;height:5px;border-radius:50%;background:var(--line);transition:background .15s;}
+.pqc-dot.on{background:var(--ink);}
+.pqc-arrows{display:flex;gap:4px;}
+.pqc-arr{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--wh);cursor:pointer;font-size:13px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit;}
+.pqc-arr:hover{border-color:var(--ink);background:var(--ink);color:#fff;}
+.pq-wrap{display:flex;flex-direction:column;gap:0;}
+.pq-block{border:1px solid var(--line2);border-radius:var(--rlg);padding:16px;margin-bottom:12px;transition:border-color .2s,background .2s;display:none;}
+.pq-block.pq-active{display:block;}
+.pq-block.pq-complete{display:block;border-color:var(--b);background:var(--bl);}
+.pq-num{font-size:10px;font-weight:700;color:var(--r);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;}
+.pq-label{font-size:15px;font-weight:600;line-height:1.3;letter-spacing:-0.2px;margin-bottom:5px;}
+.pq-sub{font-size:13px;color:var(--mid);line-height:1.5;margin-bottom:14px;}
+/* examples toggle */
+.pq-ex-toggle{display:inline-flex;align-items:center;gap:5px;background:none;border:none;font-size:12px;font-weight:600;color:var(--r);cursor:pointer;padding:0;font-family:inherit;margin-bottom:12px;}
+.pq-ex-toggle svg{transition:transform .2s;}
+.pq-ex-toggle.open svg{transform:rotate(180deg);}
+.pq-examples{display:none;flex-direction:column;gap:6px;margin-bottom:12px;}
+.pq-examples.show{display:flex;}
+.pqe-label{font-size:10px;font-weight:600;color:var(--soft);letter-spacing:.3px;text-transform:uppercase;margin-bottom:4px;}
+.pqe{text-align:left;background:var(--wh);border:1px solid var(--line2);border-radius:var(--rsm);padding:9px 12px;font-size:12px;color:var(--mid);cursor:pointer;line-height:1.4;font-family:inherit;transition:all .15s;}
+.pqe:hover{border-color:var(--r);color:var(--ink);}
+/* input area */
+.pq-shell{border:1px solid var(--line);border-radius:var(--rmd);overflow:hidden;transition:border-color .15s;margin-bottom:0;}
+.pq-shell:focus-within{border-color:var(--ink);}
+.pq-shell.rec{border-color:var(--r);}
+.pq-ta{width:100%;min-height:80px;padding:12px 13px;border:none;font-size:13px;color:var(--ink);resize:none;font-family:inherit;line-height:1.55;outline:none;display:block;}
+.pq-ta::placeholder{color:var(--soft);}
+.pq-bar{display:flex;align-items:center;justify-content:space-between;padding:7px 9px 7px 12px;border-top:1px solid var(--line2);background:var(--sur);}
+.pq-hint{font-size:11px;color:var(--mid);display:flex;align-items:center;gap:5px;}
+.pq-mic{width:30px;height:30px;border-radius:50%;border:none;background:var(--ink);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.pq-mic:hover{transform:scale(1.07);}
+.pq-mic.rec{background:var(--r);animation:pulse 1.1s infinite;}
+.pq-next{background:var(--ink);color:#fff;border:none;border-radius:var(--rsm);padding:11px 14px;font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;transition:background .15s;font-family:inherit;}
+.pq-next:hover{background:#111;}
+/* done state */
+.pq-done{display:none;align-items:flex-start;justify-content:space-between;gap:10px;}
+.pq-done.show{display:flex;}
+.pq-done-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1;}
+.pq-edit{font-size:12px;font-weight:600;color:var(--b);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;flex-shrink:0;text-decoration:underline;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div class="notch"></div>
+  <div class="vp">
+
+    <div class="top">
+      <div class="top-l">
+        <svg width="20" height="20" viewBox="0 0 26 26" fill="none"><path d="M13 2C7.477 2 3 6.477 3 12c0 4.2 2.6 7.8 6.3 9.3L13 24l3.7-2.7C20.4 19.8 23 16.2 23 12 23 6.477 18.523 2 13 2z" fill="#FF385C"/><circle cx="13" cy="12" r="3.5" fill="white"/></svg>
+        <span class="top-w">Experience Builder</span>
+      </div>
+      <div class="av">YK</div>
+    </div>
+
+    <div class="prog">
+      <div class="ps on" id="ps1"><span class="pd">1</span>Tell</div>
+      <div class="pl" id="pl1"></div>
+      <div class="ps" id="ps2"><span class="pd">2</span>Craft</div>
+      <div class="pl" id="pl2"></div>
+      <div class="ps" id="ps3"><span class="pd">3</span>Refine</div>
+    </div>
+
+    <!-- WELCOME -->
+    <div class="screen on" id="s0">
+      <div class="scroll">
+        <h1 class="w-h1">Build something worth telling stories about.</h1>
+        <p class="w-lede">We'll help you craft your story arc and refine it against Airbnb's quality bar — to ensure the most memorable outcome for your guests.</p>
+
+        <div class="tier-lbl">Airbnb's quality bar <span class="tl-line"></span></div>
+        <div class="pillars-intro">
+          <div class="pi-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg><div><div class="pi-t">Uniqueness</div><div class="pi-d">Couldn't exist with a different host</div></div></div>
+          <div class="pi-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21l-1 -1l-1 1l-1 -1l-1 1v-9a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1z"/><path d="M9 6a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M15 9.34a4 4 0 1 0 -6 0"/></svg><div><div class="pi-t">Host expertise</div><div class="pi-d">Knowledge only you can share</div></div></div>
+          <div class="pi-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l0 18"/><path d="M16 7c0 -1.657 -1.79 -3 -4 -3s-4 1.343 -4 3s1.79 3 4 3s4 1.343 4 3s-1.79 3 -4 3s-4 -1.343 -4 -3"/></svg><div><div class="pi-t">Value for money</div><div class="pi-d">Worth more than the price</div></div></div>
+          <div class="pi-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M11.5 11.5l9.5 9.5"/><path d="M16.5 16.5l3 -3"/></svg><div><div class="pi-t">Insider access</div><div class="pi-d">What guests can't arrange alone</div></div></div>
+          <div class="pi-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/><path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"/></svg><div><div class="pi-t">Memorable moments</div><div class="pi-d">A moment they didn't expect</div></div></div>
+        </div>
+
+        <div class="tier-lbl">Going further <span class="tl-line"></span></div>
+        <div class="tier-sub">The difference between good and unforgettable.</div>
+        <div class="pillars-intro further">
+          <div class="pi-item further-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"/></svg><div><div class="pi-t">Active participation</div><div class="pi-d">Guests do, not just watch</div></div></div>
+          <div class="pi-item further-item"><svg class="pi-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l4 8l5 -5l-2.5 11h-13l-2.5 -11l5 5z"/></svg><div><div class="pi-t">Earned reward</div><div class="pi-d">The payoff is worked for, not handed over</div></div></div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn" onclick="go(1)">Get started</button></div>
+    </div>
+
+    <!-- TELL: 3 priming questions -->
+    <div class="screen" id="s1">
+      <div class="scroll">
+        <button class="back" onclick="go(0)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M15 6l-6 6l6 6"/></svg> Back</button>
+        <p class="eyebrow">Step 1 of 3 · Tell</p>
+        <h2 class="h1">Three questions to start.</h2>
+        <p class="lede" style="margin-bottom:20px;">Your answers shape the arc, the peak, and the listing.</p>
+
+        <div class="pq-wrap">
+
+          <!-- Q1 -->
+          <div class="pq-block pq-active" id="pq1">
+            <div class="pq-num">01 of 03</div>
+            <div class="pq-label">What are you hosting?</div>
+            <div class="pq-sub">The type of experience, where it happens, how long it runs, and what makes it worth showing up for.</div>
+            <button class="pq-ex-toggle" id="pq1-ext" onclick="toggleEx(1)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6l6-6"/></svg>
+              See an example
+            </button>
+            <div class="pq-examples" id="pq1-ex">
+              <div class="pq-carousel">
+                <div class="pqc-track" id="pq1-track">
+                  <div class="pqc-slide">"A 3-hour food tour through Palermo's street markets — eating with vendors, not tourists"</div>
+                  <div class="pqc-slide">"A sunset sail off the Algarve with a local fisherman — 2 hours, small group, real stories"</div>
+                  <div class="pqc-slide">"A ceramics workshop in my Oaxaca studio — half technique, half the history behind the craft"</div>
+                </div>
+                <div class="pqc-footer">
+                  <div class="pqc-dots" id="pq1-dots">
+                    <span class="pqc-dot on"></span><span class="pqc-dot"></span><span class="pqc-dot"></span>
+                  </div>
+                  <div class="pqc-arrows">
+                    <button class="pqc-arr" onclick="stepEx(1,-1)">&#8592;</button>
+                    <button class="pqc-arr" onclick="stepEx(1,1)">&#8594;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pq-shell" id="pq1-shell">
+              <textarea class="pq-ta" id="pq1-ta" placeholder="Speak or type…" oninput="onQInput(1)"></textarea>
+              <div class="pq-bar">
+                <span class="pq-hint" id="pq1-hint">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>
+                  Tap to speak
+                </span>
+                <button class="pq-mic" id="pq1-mic" onclick="micQ(1)" aria-label="Record">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>
+                </button>
+              </div>
+            </div>
+            <button class="pq-next" id="pq1-next" onclick="commitQ(1)" style="display:none;">Next →</button>
+            <div class="pq-done" id="pq1-done">
+              <div class="pq-done-text" id="pq1-val"></div>
+              <button class="pq-edit" onclick="editQ(1)">Edit</button>
+            </div>
+          </div>
+
+          <!-- Q2 (hidden until Q1 done) -->
+          <div class="pq-block" id="pq2">
+            <div class="pq-num">02 of 03</div>
+            <div class="pq-label">Why are you the only person who can lead this?</div>
+            <div class="pq-sub">What you know, who you know, or where you can take guests that they couldn't find on their own.</div>
+            <button class="pq-ex-toggle" id="pq2-ext" onclick="toggleEx(2)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6l6-6"/></svg>
+              See an example
+            </button>
+            <div class="pq-examples" id="pq2-ex">
+              <div class="pq-carousel">
+                <div class="pqc-track" id="pq2-track">
+                  <div class="pqc-slide">"I've sold fish in this market for 20 years — every vendor holds things back for my group"</div>
+                  <div class="pqc-slide">"I trained under the last master of this craft still working in the region"</div>
+                  <div class="pqc-slide">"My family has run this vineyard for four generations — guests eat at our table, not a tasting room"</div>
+                </div>
+                <div class="pqc-footer">
+                  <div class="pqc-dots" id="pq2-dots">
+                    <span class="pqc-dot on"></span><span class="pqc-dot"></span><span class="pqc-dot"></span>
+                  </div>
+                  <div class="pqc-arrows">
+                    <button class="pqc-arr" onclick="stepEx(2,-1)">&#8592;</button>
+                    <button class="pqc-arr" onclick="stepEx(2,1)">&#8594;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pq-shell" id="pq2-shell">
+              <textarea class="pq-ta" id="pq2-ta" placeholder="Speak or type…" oninput="onQInput(2)"></textarea>
+              <div class="pq-bar">
+                <span class="pq-hint" id="pq2-hint">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>
+                  Tap to speak
+                </span>
+                <button class="pq-mic" id="pq2-mic" onclick="micQ(2)" aria-label="Record">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>
+                </button>
+              </div>
+            </div>
+            <button class="pq-next" id="pq2-next" onclick="commitQ(2)" style="display:none;">Next →</button>
+            <div class="pq-done" id="pq2-done">
+              <div class="pq-done-text" id="pq2-val"></div>
+              <button class="pq-edit" onclick="editQ(2)">Edit</button>
+            </div>
+          </div>
+
+          <!-- Q3 (hidden until Q2 done) -->
+          <div class="pq-block" id="pq3">
+            <div class="pq-num">03 of 03</div>
+            <div class="pq-label">Who are you designing this for, and what do you want them to leave with?</div>
+            <div class="pq-sub">Not the itinerary — the feeling. What should a guest be able to say, feel, or do after?</div>
+            <button class="pq-ex-toggle" id="pq3-ext" onclick="toggleEx(3)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6l6-6"/></svg>
+              See an example
+            </button>
+            <div class="pq-examples" id="pq3-ex">
+              <div class="pq-carousel">
+                <div class="pqc-track" id="pq3-track">
+                  <div class="pqc-slide">"Someone curious about a city who wants to feel like they actually lived in it for a few hours"</div>
+                  <div class="pqc-slide">"A family who wants one story they'll still be telling at dinner next year"</div>
+                  <div class="pqc-slide">"A solo traveller who wants real connection — not a tour, a conversation"</div>
+                </div>
+                <div class="pqc-footer">
+                  <div class="pqc-dots" id="pq3-dots">
+                    <span class="pqc-dot on"></span><span class="pqc-dot"></span><span class="pqc-dot"></span>
+                  </div>
+                  <div class="pqc-arrows">
+                    <button class="pqc-arr" onclick="stepEx(3,-1)">&#8592;</button>
+                    <button class="pqc-arr" onclick="stepEx(3,1)">&#8594;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pq-shell" id="pq3-shell">
+              <textarea class="pq-ta" id="pq3-ta" placeholder="Speak or type…" oninput="onQInput(3)"></textarea>
+              <div class="pq-bar">
+                <span class="pq-hint" id="pq3-hint">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>
+                  Tap to speak
+                </span>
+                <button class="pq-mic" id="pq3-mic" onclick="micQ(3)" aria-label="Record">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>
+                </button>
+              </div>
+            </div>
+            <button class="pq-next" id="pq3-next" onclick="commitQ(3)" style="display:none;">See what we found →</button>
+            <div class="pq-done" id="pq3-done">
+              <div class="pq-done-text" id="pq3-val"></div>
+              <button class="pq-edit" onclick="editQ(3)">Edit</button>
+            </div>
+          </div>
+
+        </div><!-- /pq-wrap -->
+
+        <!-- Analysis reveal (after all 3) -->
+        <div class="detected" id="detected" style="margin-top:4px;">
+          <div class="det-h">Here's what makes this irreplaceable</div>
+          <div class="det-card">
+            <div class="det-tag expertise">Expertise</div>
+            <div class="det-txt">20 years shopping this market — you know every vendor by name.</div>
+          </div>
+          <div class="det-card">
+            <div class="det-tag access">Insider access</div>
+            <div class="det-txt">A private kitchen behind the restaurant. Guests can't find this alone.</div>
+          </div>
+          <div class="det-card">
+            <div class="det-tag pov">Unique POV</div>
+            <div class="det-txt">The sake shop with no sign — somewhere only locals go.</div>
+          </div>
+          <div class="det-gap" id="detGap">
+            <div class="det-gap-h"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7"/><path d="M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3"/><path d="M9.7 17l4.6 0"/></svg> One thing we didn't hear yet</div>
+            <div class="det-gap-q">What's the moment that surprises guests — something they'd never expect going in?</div>
+            <div class="input-shell"><textarea id="gapAns" placeholder="When the brewer pulls out the bottle that isn't for sale…"></textarea></div>
+          </div>
+        </div>
+        <div class="think" id="think"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2zm-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6z"/></svg><span>Shaping your arc<span class="dots"><span>.</span><span>.</span><span>.</span></span></span></div>
+      </div>
+      <div class="foot"><button class="btn" id="buildBtn" onclick="build()" disabled>Build my arc</button></div>
+    </div>
+
+    <!-- CRAFT -->
+    <div class="screen" id="s2">
+      <div class="scroll">
+        <button class="back" onclick="go(1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M15 6l-6 6l6 6"/></svg> Back</button>
+        <p class="eyebrow">Step 2 of 3 · Craft</p>
+        <h2 class="h1">The story of your experience</h2>
+        <p class="lede">Shaped from your words. Edit anything that doesn't sound like you.</p>
+        <div class="badge-time"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 7v5l3 3"/></svg> <span id="durLbl">3 hours · 3 stops</span></div>
+        <div class="arow">
+          <div class="al"><div class="anode done">1</div><div class="aconn done"></div></div>
+          <div class="ar"><div class="aslbl">Opening · 0–15 min</div><div class="ast">Establish your world</div><div class="hv">I've shopped this market for 20 years. I know every vendor by name.</div><div class="asd">Lead with this. Guests need to know who you are before they taste anything.</div></div>
+        </div>
+        <div class="arow">
+          <div class="al"><div class="anode onn">2</div><div class="aconn"></div></div>
+          <div class="ar"><div class="aslbl">Rising action · 15 min – 2 hrs</div><div class="ast">Build it stop by stop</div><div class="asd" style="margin-bottom:8px;">Each stop is a chapter, not a tasting.</div>
+            <div class="stops" id="stops">
+              <div class="stop"><div class="snum">1</div><div><div class="sn">Yamamoto's stall</div><div class="sd2">He keeps the best cuts back for your group.</div></div></div>
+              <div class="stop"><div class="snum">2</div><div><div class="sn">The sake shop with no sign</div><div class="sd2">No English menu. Somewhere outsiders don't go.</div></div></div>
+              <div class="stop"><div class="snum">3</div><div><div class="sn">Ramen counter — 7 seats</div><div class="sd2">You order. The chef nods. The room understands.</div></div></div>
+            </div>
+            <button class="add-stop" onclick="addStop()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg> Add stop</button>
+          </div>
+        </div>
+        <div class="arow">
+          <div class="al"><div class="anode pk">★</div><div class="aconn"></div></div>
+          <div class="ar"><div class="aslbl">Peak · ~2 hrs in</div>
+            <div class="peak-box"><div class="peak-eye"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg> The moment guests describe later</div><div class="peak-t">The private kitchen</div><div class="hv">It's not something you can find on Google.</div><div class="peak-d">Guests cook alongside the chef — a real service, not a demo. This couldn't happen without you.</div></div>
+          </div>
+        </div>
+        <div class="arow">
+          <div class="al"><div class="anode">4</div></div>
+          <div class="ar"><div class="aslbl">Close · final 15 min</div><div class="ast">The story they take home</div><div class="asd">Not a goodbye — a gift. A recipe card. The brewer's name. Guests leave mid-sentence, not mid-plate.</div></div>
+        </div>
+        <div class="note ok"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M5 12l5 5l10 -10"/></svg><span>Strong arc. Clear peak, real participation, a strong opening from your own words.</span></div>
+        <div class="note warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg><span>Add one thing: a moment for guests to share, not just receive. <button class="note-link" onclick="goToMoment()">See how →</button></span></div>
+      </div>
+      <div class="foot"><button class="btn" onclick="go(3)">See where I stand</button></div>
+    </div>
+
+    <!-- EARN: DIAGNOSIS -->
+    <div class="screen" id="s3">
+      <div class="scroll">
+        <button class="back" onclick="go(2)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M15 6l-6 6l6 6"/></svg> Back to arc</button>
+        <p class="eyebrow">Step 3 of 3 · Refine</p>
+        <h2 class="h1">Where do you stand?</h2>
+        <p class="lede">Five quality criteria, plus two that take it further. Tap any card to see how you're doing.</p>
+        <div class="cult">
+          <div class="cult-fl">🇯🇵</div>
+          <div><div class="cult-n">Tokyo · relationship is the differentiator</div><div class="cult-i">Being welcomed where strangers don't go is your peak. This shapes every suggestion below.</div></div>
+        </div>
+        <div class="pillars" id="pillars">
+          <div class="sc-tier">Airbnb's quality bar <span class="tl-line"></span></div>
+          <div class="pc" id="p-unique" onclick="tog('unique')"><div class="pc-h"><span class="pc-n">Uniqueness</span><span class="badge ok">Strong</span></div><div class="pc-q">Could this exist with a different host?</div><div class="pc-d">The stall, the signless shop, the private kitchen — none survives a host swap. Irreplaceable.</div></div>
+          <div class="pc" id="p-expertise" onclick="tog('expertise')"><div class="pc-h"><span class="pc-n">Host expertise</span><span class="badge ok">Strong</span></div><div class="pc-q">Woven in, not announced?</div><div class="pc-d">20 years shows up as doors that open, not trivia. Demonstrated, never claimed.</div></div>
+          <div class="pc" id="p-value" onclick="tog('value')"><div class="pc-h"><span class="pc-n">Value for money</span><span class="badge ok">Strong</span></div><div class="pc-q">Worth more than the price?</div><div class="pc-d">Private kitchen + relationships + recipe card = strong value. The takeaway reinforces it.</div></div>
+          <div class="pc" id="p-access" onclick="tog('access')"><div class="pc-h"><span class="pc-n">Insider access</span><span class="badge ok">Strong</span></div><div class="pc-q">Something they couldn't arrange alone?</div><div class="pc-d">The private kitchen is unreplicable. Guests can't google their way in. That's the bar.</div></div>
+          <div class="pc" id="p-memorable" onclick="tog('memorable')"><div class="pc-h"><span class="pc-n">Memorable moments</span><span class="badge warn">Check</span></div><div class="pc-q">One moment they'll describe later?</div><div class="pc-d">Peak is strong but the sake shop could carry more surprise.<div class="pc-cult">In Tokyo: a reveal should feel like being let into a ritual, not just told a secret.</div><div class="pc-sug"><strong>Try:</strong> the brewer shares one thing no label would say — an opinion, a flaw they love.<button class="more-btn" onclick="moreTip(event,'memorable')">More from great hosts <span id="ar-memorable">+</span></button><div class="more-tip" id="tip-memorable">Top food-tour hosts plant one <strong>unplanned-feeling</strong> moment: a vendor who "happens" to offer a taste not on the tour, a door that opens because the host knows someone. It reads as luck but it's designed every time.</div></div></div></div>
+
+          <div class="sc-tier">Going further <span class="tl-line"></span></div>
+          <div class="pc" id="p-participation" onclick="tog('participation')"><div class="pc-h"><span class="pc-n">Active participation</span><span class="badge warn">Late</span></div><div class="pc-q">Doing, not just watching?</div><div class="pc-d">Passive until cooking. Pull participation earlier — small decisions count.<div class="pc-cult">In Tokyo: agency through choice feels natural — let them decide, not perform.</div><div class="pc-sug"><strong>Try:</strong> at the market, each guest picks one ingredient for the final dish.<button class="more-btn" onclick="moreTip(event,'participation')">More from great hosts <span id="ar-participation">+</span></button><div class="more-tip" id="tip-participation">Successful hosts give guests a <strong>real decision with a real consequence</strong> — choosing an ingredient that ends up in the dish they eat. Fake choices ("which do you prefer?") don't land; choices that change the outcome do.</div></div></div></div>
+          <div class="pc" id="p-reward" onclick="tog('reward')"><div class="pc-h"><span class="pc-n">Earned reward</span><span class="badge flag">Build</span></div><div class="pc-q">Does the payoff feel earned — or handed over?</div><div class="pc-d">Right now guests receive a lot but work for little. The best payoffs are paid for in effort — a climb, a wait, a thing made by hand. Don't sand off all the friction; it's what makes the end land.<div class="pc-cult">In Tokyo: effort is dignity — being asked to do something properly is a form of respect, not a chore.</div><div class="pc-sug"><strong>Try:</strong> guests cook the dish themselves, not watch it cooked. The meal they eat is the one they earned.<button class="more-btn" onclick="moreTip(event,'reward')">More from great hosts <span id="ar-reward">+</span></button><div class="more-tip" id="tip-reward">The strongest experiences keep one <strong>real demand</strong> in the arc — a hike to the view, a skill that takes real focus, a long ride to somewhere remote. The reward isn't given at the end; it's unlocked by what the guest put in. Remove every obstacle and you also remove the payoff.</div></div></div></div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn" onclick="go(4)">Fix the gaps</button></div>
+    </div>
+
+    <!-- EARN: PRESCRIPTION -->
+    <div class="screen" id="s4">
+      <div class="scroll">
+        <button class="back" onclick="go(3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M15 6l-6 6l6 6"/></svg> Back</button>
+        <p class="eyebrow">Step 3 of 3 · Refine</p>
+        <h2 class="h1">Moments worth adding</h2>
+        <p class="lede">Four ways to turn your warnings into strengths.</p>
+        <div class="m-card" id="m1"><div class="m-top"><div class="mw">Opening stop</div><span class="mtag part">Active participation</span></div><div class="mt">The food memory question</div><div class="md">Ask each guest a childhood food memory at stop 1. Weave it back at the close. Two minutes, and only you can tie it off.</div><button class="am" id="m1b" onclick="addM('m1')">Add to my arc</button></div>
+        <div class="m-card" id="m2"><div class="m-top"><div class="mw">Market stop</div><span class="mtag part">Active participation</span></div><div class="mt">Let guests choose the ingredient</div><div class="md">One decision at the market — which cut, which herb. They carry their choice through the whole experience.</div><button class="am" id="m2b" onclick="addM('m2')">Add to my arc</button></div>
+        <div class="m-card" id="m3"><div class="m-top"><div class="mw">Sake shop stop</div><span class="mtag peak">Peak amplifier</span></div><div class="mt">The thing no label would say</div><div class="md">The brewer shares one honest, unexpected thing. Expert honesty is a peak hiding inside a stop.</div><button class="am" id="m3b" onclick="addM('m3')">Add to my arc</button></div>
+        <div class="m-card" id="m4"><div class="m-top"><div class="mw">Peak → close</div><span class="mtag earn">Earned reward</span></div><div class="mt">Let them cook it, not watch it</div><div class="md">Hand guests the knife. The dish they eat at the close is the one they made — the payoff lands because they earned it, not because it was served.</div><button class="am" id="m4b" onclick="addM('m4')">Add to my arc</button></div>
+        <div class="evolve">
+          <div class="ev-t">It gets smarter as it runs</div>
+          <div class="ev-s">Guest signals help you refine — and help Airbnb raise the bar across Tokyo and beyond.</div>
+          <div class="ev-flow">
+            <div class="ev-step"><span class="ev-dot">1</span>You run it</div>
+            <div class="ev-step"><span class="ev-dot">2</span>Guests review it</div>
+            <div class="ev-step"><span class="ev-dot">3</span>Patterns surface</div>
+            <div class="ev-step"><span class="ev-dot">4</span>Standards evolve</div>
+          </div>
+          <div class="ev-stat">Tokyo hosts who give guests a real task to complete see <strong>+14% stronger reviews</strong> on "worth it." The food memory question is the most-added moment here.</div>
+          <div class="tog-row"><div class="tog-i">Share my signal with Airbnb<small>Improves guidance for Tokyo hosts</small></div><button class="tog" onclick="this.classList.toggle('off')" aria-label="Toggle sharing"></button></div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn" onclick="openBp()">Review &amp; submit</button></div>
+    </div>
+
+    <!-- BLUEPRINT -->
+    <div class="ov" id="ov" onclick="closeBp(event)">
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="sheet-t" id="sheetT">Review your experience</div>
+        <div class="sheet-m" id="sheetM">Yoshi K. · Tokyo · Food tour · 3 hours</div>
+
+        <div class="bp-tabs">
+          <button class="bp-tab active" id="tab-bp" onclick="switchTab('bp')">Your blueprint</button>
+          <button class="bp-tab" id="tab-lst" onclick="switchTab('lst')">Listing preview</button>
+        </div>
+
+        <!-- VIEW 1: BLUEPRINT -->
+        <div class="bp-view active" id="view-bp">
+          <div class="sheet-sec"><div class="sheet-sl">THE ARC</div>
+            <div class="bp-ar"><div class="bp-ad">1</div><div class="bp-at"><strong>Open:</strong> the 20-year market relationship.</div></div>
+            <div class="bp-ar"><div class="bp-ad">2</div><div class="bp-at"><strong>Rising:</strong> Yamamoto → signless sake shop → ramen counter.</div></div>
+            <div class="bp-ar"><div class="bp-ad pk">★</div><div class="bp-at"><strong>Peak:</strong> private kitchen, cook alongside the chef.</div></div>
+            <div class="bp-ar"><div class="bp-ad">4</div><div class="bp-at"><strong>Close:</strong> eat the dish you cooked + recipe card + brewer's name.</div></div>
+          </div>
+          <div class="sheet-sec"><div class="sheet-sl">PILLAR RESULTS</div>
+            <div class="bp-fl ok">Uniqueness · Expertise · Value · Access — strong</div>
+            <div class="bp-fl warn">Memorable moments · Participation — strengthen</div>
+            <div class="bp-fl flag">Earned reward — build in real effort before the payoff</div>
+          </div>
+          <div class="sheet-sec"><div class="sheet-sl">MOMENTS ADDED</div><div style="font-size:12px;color:var(--mid);line-height:1.7;" id="bpM">None yet — tap "Add to my arc" on any suggestion.</div></div>
+        </div>
+
+        <!-- VIEW 2: LISTING PREVIEW -->
+        <div class="bp-view" id="view-lst">
+          <div class="lst-hero">
+            <span class="lst-hero-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12zm0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3"/></svg></span>
+            <span class="lst-hero-badge">Food &amp; drink · Tokyo</span>
+          </div>
+          <div class="lst-title">Hidden Tsukiji: 20 years of market secrets, ending in a private kitchen</div>
+          <div class="lst-meta">
+            <span class="lst-rate"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg> New</span>
+            <span class="dot">·</span>
+            <span>3 hours</span>
+            <span class="dot">·</span>
+            <span>Up to 8 guests</span>
+          </div>
+          <div class="lst-host">
+            <div class="lst-host-av">YK</div>
+            <div>
+              <div class="lst-host-n">Hosted by Yoshi</div>
+              <div class="lst-host-d">Tokyo local · shopping this market for 20 years</div>
+            </div>
+          </div>
+          <div class="lst-sec-t">What you'll do</div>
+          <div class="lst-do">
+            <div class="lst-do-item"><div class="lst-do-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M7 21l3 -4"/><path d="M16 21l-2 -4l-3 -3l1 -6"/><path d="M6 12l2 -3l4 -1l3 3l3 1"/><path d="M12 4m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></div><div><div class="lst-do-t">Meet where the locals shop</div><div class="lst-do-d">Start at Yoshi's market, where vendors greet him by name and save their best for his group.</div></div></div>
+            <div class="lst-do-item"><div class="lst-do-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M8 21l8 0"/><path d="M12 15l0 6"/><path d="M12 15a6 6 0 0 0 6 -6c0 -2 -.5 -4 -1 -6h-10c-.5 2 -1 4 -1 6a6 6 0 0 0 6 6z"/><path d="M6.8 7h10.4"/></svg></div><div><div class="lst-do-t">Taste your way through hidden stops</div><div class="lst-do-d">A sake shop with no sign, a 7-seat ramen counter — places you'd never find alone.</div></div></div>
+            <div class="lst-do-item"><div class="lst-do-ic pk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></div><div><div class="lst-do-t">Cook in a private kitchen</div><div class="lst-do-d">Step behind a restaurant and cook one dish alongside the chef — the part guests never forget.</div></div></div>
+            <div class="lst-do-item"><div class="lst-do-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M12 8l0 13"/><path d="M19 12v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5"/></svg></div><div><div class="lst-do-t">Leave with more than a full stomach</div><div class="lst-do-d">A handwritten recipe and a place that now feels a little like yours.</div></div></div>
+          </div>
+          <div class="lst-sec-t">What's included</div>
+          <div class="lst-inc">
+            <span class="lst-inc-i"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12zm0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3"/></svg>All tastings</span>
+            <span class="lst-inc-i"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M8 21l8 0"/><path d="M12 15l0 6"/><path d="M12 15a6 6 0 0 0 6 -6c0 -2 -.5 -4 -1 -6h-10c-.5 2 -1 4 -1 6a6 6 0 0 0 6 6z"/><path d="M6.8 7h10.4"/></svg>Sake flight</span>
+            <span class="lst-inc-i"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 3c1.918 0 3.52 1.35 3.91 3.151a4 4 0 0 1 2.09 7.723l0 7.126h-12v-7.126a4 4 0 1 1 2.092 -7.723a4 4 0 0 1 3.908 -3.151z"/><path d="M6.161 17.009l11.839 -.009"/></svg>Cooking session</span>
+            <span class="lst-inc-i"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M13 20l7 -7"/><path d="M13 20v-6a1 1 0 0 1 1 -1h6v-7a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v14a2 2 0 0 0 2 2h6"/></svg>Recipe card</span>
+          </div>
+          <div class="lst-note">This is how guests will see your experience.</div>
+        </div>
+
+        <div class="submit-note" id="submitNote">Our Experiences team reviews every submission against the quality standard before it goes live. You'll hear back within 3–5 days.</div>
+        <button class="btn" id="submitBtn" onclick="submitExp()" style="margin-top:8px;">Submit for review</button>
+
+        <!-- CONFIRMATION -->
+        <div class="confirmed" id="confirmed">
+          <div class="confirmed-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg></div>
+          <div class="confirmed-t">Submitted for review</div>
+          <div class="confirmed-d">Your experience is with the Airbnb Experiences team. They'll check it against the quality standard and get back to you within 3–5 days.</div>
+          <button class="btn" onclick="finishAndHome()" style="margin-top:18px;">Done</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var added=[],stopCount=3,isRec=false;
+var qAnswers={1:'',2:'',3:''};
+var qDone={1:false,2:false,3:false};
+
+function go(n){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('s'+n).classList.add('on');
+  var pn=n>=3?3:(n===0?1:n);
+  [1,2,3].forEach(function(i){
+    var p=document.getElementById('ps'+i);
+    p.classList.remove('on','done');
+    if(i===pn)p.classList.add('on');
+    else if(i<pn)p.classList.add('done');
+  });
+  [1,2].forEach(function(i){
+    var l=document.getElementById('pl'+i);
+    l.classList.remove('done');
+    if(i<pn)l.classList.add('done');
+  });
+  var sc=document.querySelector('#s'+n+' .scroll');
+  if(sc)sc.scrollTop=0;
+}
+
+// Voice samples per question
+var qSamples={
+  1:"A 3-hour food tour through Tsukiji outer market — I take small groups through the stalls, we eat with vendors, and end with sake in a shop that has no English sign.",
+  2:"I've shopped this market for 20 years. I know every vendor by name — Yamamoto keeps the best cuts back for my group. This is not something you can find on Google.",
+  3:"I'm designing for curious travelers who want to feel like a local for a few hours — not someone who watched a travel show, but someone who actually lives here."
+};
+var micSvgStr='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2m0 3a3 3 0 0 1 3-3a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3a3 3 0 0 1-3-3z"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M8 21l8 0"/><path d="M12 17l0 4"/></svg>';
+var waveSvgStr='<div class="wave"><span></span><span></span><span></span><span></span><span></span></div>';
+
+// Toggle examples disclosure
+function toggleEx(n){
+  var ex=document.getElementById('pq'+n+'-ex');
+  var btn=document.getElementById('pq'+n+'-ext');
+  var open=ex.classList.toggle('show');
+  btn.classList.toggle('open',open);
+  btn.lastChild.textContent=open?' Hide example':' See an example';
+}
+
+// Carousel step — no prefill, just browse
+var exIdx={1:0,2:0,3:0};
+function stepEx(n,dir){
+  var slides=document.querySelectorAll('#pq'+n+'-track .pqc-slide');
+  var dots=document.querySelectorAll('#pq'+n+'-dots .pqc-dot');
+  var total=slides.length;
+  slides[exIdx[n]].classList.remove('on');
+  dots[exIdx[n]].classList.remove('on');
+  exIdx[n]=(exIdx[n]+dir+total)%total;
+  slides[exIdx[n]].classList.add('on');
+  dots[exIdx[n]].classList.add('on');
+}
+
+// Show/hide Next button as user types
+function onQInput(n){
+  var val=document.getElementById('pq'+n+'-ta').value.trim();
+  document.getElementById('pq'+n+'-next').style.display=val.length>10?'block':'none';
+}
+
+// Per-question voice mic
+function micQ(n){
+  var isRec=document.getElementById('pq'+n+'-mic').classList.contains('rec');
+  var mic=document.getElementById('pq'+n+'-mic');
+  var hint=document.getElementById('pq'+n+'-hint');
+  var shell=document.getElementById('pq'+n+'-shell');
+  if(!isRec){
+    mic.classList.add('rec');
+    shell.classList.add('rec');
+    hint.innerHTML=waveSvgStr+' Listening\u2026';
+    setTimeout(function(){
+      if(!mic.classList.contains('rec'))return;
+      mic.classList.remove('rec');
+      shell.classList.remove('rec');
+      hint.innerHTML=micSvgStr+' Tap to speak';
+      document.getElementById('pq'+n+'-ta').value=qSamples[n];
+      onQInput(n);
+    },2400);
+  } else {
+    mic.classList.remove('rec');
+    shell.classList.remove('rec');
+    hint.innerHTML=micSvgStr+' Tap to speak';
+  }
+}
+
+// Commit answer, collapse, surface next
+function commitQ(n){
+  var val=document.getElementById('pq'+n+'-ta').value.trim();
+  if(!val)return;
+  qAnswers[n]=val;
+  var block=document.getElementById('pq'+n);
+  // hide input elements
+  block.querySelector('.pq-sub').style.display='none';
+  block.querySelector('.pq-ex-toggle').style.display='none';
+  var ex=document.getElementById('pq'+n+'-ex');
+  if(ex)ex.style.display='none';
+  block.querySelector('.pq-shell').style.display='none';
+  block.querySelector('#pq'+n+'-next').style.display='none';
+  // show done state
+  block.classList.add('pq-complete');
+  document.getElementById('pq'+n+'-val').textContent=val;
+  document.getElementById('pq'+n+'-done').classList.add('show');
+
+  if(n<3){
+    setTimeout(function(){
+      var next=document.getElementById('pq'+(n+1));
+      next.classList.add('pq-active');
+      next.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },220);
+  } else {
+    setTimeout(function(){
+      var det=document.getElementById('detected');
+      det.style.display='block';
+      det.scrollIntoView({behavior:'smooth',block:'start'});
+      document.getElementById('buildBtn').disabled=false;
+    },320);
+  }
+}
+
+// Edit a committed question — re-open it and re-lock subsequent ones
+function editQ(n){
+  var block=document.getElementById('pq'+n);
+  block.querySelector('.pq-sub').style.display='';
+  block.querySelector('.pq-ex-toggle').style.display='';
+  block.querySelector('.pq-shell').style.display='';
+  block.querySelector('#pq'+n+'-next').style.display='none';
+  block.classList.remove('pq-complete');
+  document.getElementById('pq'+n+'-done').classList.remove('show');
+  qAnswers[n]='';
+  for(var i=n+1;i<=3;i++){
+    var b=document.getElementById('pq'+i);
+    b.classList.remove('pq-active','pq-complete');
+    b.querySelector('.pq-sub').style.display='';
+    b.querySelector('.pq-ex-toggle').style.display='';
+    b.querySelector('.pq-shell').style.display='';
+    document.getElementById('pq'+i+'-done').classList.remove('show');
+    document.getElementById('pq'+i+'-next').style.display='none';
+    document.getElementById('pq'+i+'-ta').value='';
+    qAnswers[i]='';
+  }
+  document.getElementById('detected').style.display='none';
+  document.getElementById('buildBtn').disabled=true;
+  document.getElementById('pq'+n+'-ta').focus();
+}
+
+function build(){
+  var b=document.getElementById('buildBtn'),t=document.getElementById('think');
+  b.disabled=true;b.textContent='Building…';t.style.display='flex';
+  setTimeout(function(){t.style.display='none';b.textContent='Build my arc';go(2);},1600);
+}
+
+function addStop(){
+  stopCount++;
+  var l=document.getElementById('stops'),d=document.createElement('div');
+  d.className='stop';
+  d.innerHTML='<div class="snum">'+stopCount+'</div><div style="flex:1;"><div class="sn" contenteditable="true" style="outline:none;border-bottom:1px dashed var(--line);">New stop</div><div class="sd2" contenteditable="true" style="outline:none;margin-top:3px;">What happens here, and why it matters?</div></div>';
+  l.appendChild(d);
+  document.getElementById('durLbl').textContent='3 hours · '+stopCount+' stops';
+  d.querySelector('[contenteditable]').focus();
+}
+
+function tog(id){
+  var el=document.getElementById('p-'+id),o=el.classList.contains('open');
+  document.querySelectorAll('.pc').forEach(function(c){c.classList.remove('open');});
+  if(!o){el.classList.add('open');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+
+function addM(id){
+  var c=document.getElementById(id),b=document.getElementById(id+'b');
+  c.classList.add('added');b.classList.add('added');b.textContent='✓ Added';b.onclick=null;
+  if(added.indexOf(id)<0)added.push(id);
+}
+
+function goToMoment(){go(4);setTimeout(function(){var m=document.getElementById('m1');if(m){m.scrollIntoView({behavior:'smooth',block:'center'});m.classList.add('hl');setTimeout(function(){m.classList.remove('hl');},2200);}},120);}
+
+function moreTip(e,id){e.stopPropagation();var t=document.getElementById('tip-'+id),ar=document.getElementById('ar-'+id);var open=t.classList.toggle('show');ar.textContent=open?'–':'+';}
+
+function openBp(){
+  var names={m1:'Food memory question (participation)',m2:'Guest chooses ingredient (participation)',m3:'Sake brewer reveal (peak)',m4:'Guests cook it themselves (earned reward)'};
+  if(added.length)document.getElementById('bpM').innerHTML=added.map(function(id){return '✓ '+names[id];}).join('<br>');
+  document.getElementById('ov').classList.add('show');
+}
+
+function closeBp(e){
+  if(!e||e.target===document.getElementById('ov')){
+    document.getElementById('ov').classList.remove('show');
+    setTimeout(resetSheet,300);
+  }
+}
+
+function submitExp(){
+  document.querySelector('.bp-tabs').style.display='none';
+  document.getElementById('view-bp').classList.remove('active');
+  document.getElementById('view-lst').classList.remove('active');
+  document.getElementById('submitNote').style.display='none';
+  document.getElementById('submitBtn').style.display='none';
+  document.getElementById('sheetT').style.display='none';
+  document.getElementById('sheetM').style.display='none';
+  document.getElementById('confirmed').style.display='block';
+  var sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;
+}
+
+function finishAndHome(){document.getElementById('ov').classList.remove('show');setTimeout(function(){resetSheet();go(0);},300);}
+
+function resetSheet(){
+  document.querySelector('.bp-tabs').style.display='flex';
+  document.getElementById('submitNote').style.display='block';
+  document.getElementById('submitBtn').style.display='block';
+  document.getElementById('sheetT').style.display='block';
+  document.getElementById('sheetM').style.display='block';
+  document.getElementById('confirmed').style.display='none';
+  switchTab('bp');
+}
+
+function switchTab(t){
+  document.getElementById('tab-bp').classList.toggle('active',t==='bp');
+  document.getElementById('tab-lst').classList.toggle('active',t==='lst');
+  document.getElementById('view-bp').classList.toggle('active',t==='bp');
+  document.getElementById('view-lst').classList.toggle('active',t==='lst');
+  var sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;
+}
+</script>
+</body>
+</html>
